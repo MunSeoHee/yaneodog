@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'mainapp.apps.MainappConfig',
-    'price.apps.PriceConfig'
+    'price.apps.PriceConfig',
+    'chartjs',
 ]
 
 MIDDLEWARE = [
@@ -75,20 +76,26 @@ WSGI_APPLICATION = 'yaneodog.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'HOST': 'yaneodog.cledwuioifvg.us-east-2.rds.amazonaws.com',
+#         'PORT': '3306',
+#         'NAME': 'webplay2019',
+#         'USER': 'webplay2019',
+#         'PASSWORD': 'webplay2019',
+#         'OPTIONS': {
+#             'init_command': 'SET sql_mode="STRICT_TRANS_TABLES"'
+#         },
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'HOST': 'yaneodog.cledwuioifvg.us-east-2.rds.amazonaws.com',
-        'PORT': '3306',
-        'NAME': 'webplay2019',
-        'USER': 'webplay2019',
-        'PASSWORD': 'webplay2019',
-        'OPTIONS': {
-            'init_command': 'SET sql_mode="STRICT_TRANS_TABLES"'
-        },
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
@@ -114,7 +121,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'Asia/Kr'
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 

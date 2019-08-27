@@ -1,0 +1,145 @@
+
+
+{% extends 'base.html' %}
+
+{% block content %}
+{% load staticfiles %}
+
+<div class="container-fluid">
+
+</div>
+<div class="container-fluid">
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+          <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">애견정보</a>
+          <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">예방접종</a>
+          <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">진료</a>
+          <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-life" aria-selected="false">일상</a>
+        </div>
+      </nav>
+      <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+            <div class="row d-flex justify-content-start">
+                <div class="col-lg-1">
+                    <img src="{% static 'main_img01.jpg' %}" alt="..." class="rounded-circle" style="width: 100px; height: 100px;">
+                </div>
+                <div class="col-lg-3">
+                    <h3>멍뭉이</h3>
+                    <p>2018.04.23</p>
+                    <p>여자</p>
+                    <p>강아지 골든리트리버</p>
+                </div>
+            </div>
+            <hr>
+            <div class="container">
+                <h2>변화량</h2>
+            </div>
+            <div class="container">
+                <h2>특이사항</h2>
+                <div class="row">
+                    <div class="card col-lg-4 pl-0 pr-0" style="width: 18rem;">
+                        <div class="card-header">
+                            음식
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Cras justo odio</li>
+                            <li class="list-group-item">Dapibus ac facilisis in</li>
+                            <li class="list-group-item">Vestibulum at eros</li>
+                        </ul>
+                    </div>
+                    <div class="card col-lg-4 pl-0 pr-0" style="width: 18rem;">
+                        <div class="card-header">
+                            건강
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Cras justo odio</li>
+                            <li class="list-group-item">Dapibus ac facilisis in</li>
+                            <li class="list-group-item">Vestibulum at eros</li>
+                        </ul>
+                    </div>
+                    <div class="card col-lg-4 pl-0 pr-0" style="width: 18rem;">
+                        <div class="card-header">
+                            기타
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Cras justo odio</li>
+                            <li class="list-group-item">Dapibus ac facilisis in</li>
+                            <li class="list-group-item">Vestibulum at eros</li>
+                        </ul>
+                    </div>
+                
+                
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+            <h2>예방접종</h2>
+            <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">First</th>
+                        <th scope="col">Last</th>
+                        <th scope="col">Handle</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row">1</th>
+                        <td>Mark</td>
+                        <td>Otto</td>
+                        <td>@mdo</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">2</th>
+                        <td>Jacob</td>
+                        <td>Thornton</td>
+                        <td>@fat</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">3</th>
+                        <td>Larry</td>
+                        <td>the Bird</td>
+                        <td>@twitter</td>
+                      </tr>
+                    </tbody>
+                  </table>
+        </div>
+        <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+                <h2>진료</h2>
+                <table class="table table-striped">
+                        <thead>
+                          <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">First</th>
+                            <th scope="col">Last</th>
+                            <th scope="col">Handle</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <th scope="row">1</th>
+                            <td>Mark</td>
+                            <td>Otto</td>
+                            <td>@mdo</td>
+                          </tr>
+                          <tr>
+                            <th scope="row">2</th>
+                            <td>Jacob</td>
+                            <td>Thornton</td>
+                            <td>@fat</td>
+                          </tr>
+                          <tr>
+                            <th scope="row">3</th>
+                            <td>Larry</td>
+                            <td>the Bird</td>
+                            <td>@twitter</td>
+                          </tr>
+                        </tbody>
+                      </table>
+        </div>
+        <div class="tab-pane fade" id="nav-life" role="tabpanel" aria-labelledby="nav-contact-tab">...</div>
+      </div>
+</div>
+
+{% endblock %}
