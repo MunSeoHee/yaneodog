@@ -6,142 +6,472 @@
 {% load staticfiles %}
 
 <div class="container-fluid bg-light d-flex justify-content-center pt-5 pb-5">
-    <img src="{% static 'main_img01.jpg' %}" alt="..." class="rounded-circle mr-2 ml-2" style="width: 100px; height: 100px;">
-    <img src="{% static 'main_img01.jpg' %}" alt="..." class="rounded-circle mr-2 ml-2" style="width: 100px; height: 100px;">
-    <img src="{% static 'main_img01.jpg' %}" alt="..." class="rounded-circle mr-2 ml-2" style="width: 100px; height: 100px;">
+    {% for i in dog_infos %}
+    <a href="{% url 'diary_dog' i.num %}"><img src="{{i.image.url}}" alt="..." class="rounded-circle mr-2 ml-2" style="width: 100px; height: 100px;"></a>
+    {%endfor%}
+   <i class="fas fa-plus-circle text-muted fa-6x" style="width: 100px; height: 100px;" data-toggle="modal" data-target="#dog"></i>
 </div>
 <div class="container-fluid pl-0 pr-0">
     <nav>
-        <div class="nav nav-tabs bg-light" id="nav-tab" role="tablist">
-          <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">애견정보</a>
-          <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">예방접종</a>
-          <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">진료</a>
-          <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-life" aria-selected="false">일상</a>
+        <div class="nav nav-tabs bg-light">
+          <a class="nav-item nav-link active" href="/diary" aria-selected="true">애견정보</a>
+          <a class="nav-item nav-link" href="{% url 'vaccination' dog_num %}" aria-selected="false">예방접종</a>
+          <a class="nav-item nav-link" href="{% url 'diagnosis' dog_num %}" aria-selected="false">진료</a>
+          <a class="nav-item nav-link" href="{% url 'dailylife' dog_num %}" aria-selected="false">일상</a>
         </div>
       </nav>
       <div class="tab-content" id="nav-tabContent">
         <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-            <div class="row d-flex justify-content-start">
-                <div class="col-lg-1">
-                    <img src="{% static 'main_img01.jpg' %}" alt="..." class="rounded-circle" style="width: 100px; height: 100px;">
-                </div>
-                <div class="col-lg-3">
-                    <h3>멍뭉이</h3>
-                    <p>2018.04.23</p>
-                    <p>여자</p>
-                    <p>강아지 골든리트리버</p>
+            <div class="row d-flex justify-content-start mt-4 ml-5 mb-4">
+              <div class="col-lg-4 row ">
+                  <div class="col text-right">
+                      <img src="{{dog_info.image.url}}" alt="..." class="rounded-circle" style="width: 100px; height: 100px;">
+                  </div>
+                  <div class="col text-left">
+                      <h3>{{dog_info.name}}</h3>
+                      <p class="m-0"><i class="fas fa-birthday-cake"></i> {{dog_info.birthday|date:"Y년 m월 d일"}}</p>
+                      {% if dog_info.gender %}
+                        <p class="m-0"><i class="fas fa-venus-mars"></i> 남자</p>
+                      {% else %}
+                        <p class="m-0"><i class="fas fa-venus-mars"></i> 여자</p>
+                      {% endif %}
+                      <p class="m-0"><i class="fas fa-paw"></i> {{dog_info.kind}}</p>
+                  </div>
+              </div>
+                
+                <div class="col-lg-8 text-right ">
+                  <a href="{% url 'dog_delete' dog_num %}"><i class="fas fa-trash-alt text-secondary"></i>삭제</a>
                 </div>
             </div>
+           
             <hr>
-            <div class="container">
-                <h2>변화량</h2>
-            </div>
-            <div class="container">
-                <h2>특이사항</h2>
-                <div class="row">
-                    <div class="card col-lg-4 pl-0 pr-0" style="width: 18rem;">
-                        <div class="card-header">
-                            음식
-                        </div>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">Cras justo odio</li>
-                            <li class="list-group-item">Dapibus ac facilisis in</li>
-                            <li class="list-group-item">Vestibulum at eros</li>
-                        </ul>
+            <div class="container-fluid m-0 p-0 mb-5">
+                <h2 class="pl-4 ml-5 mb-4 mt-4">변화량</h2>
+                <div class="container-fluid row d-flex justify-content-center m-0 p-0">
+                  <div class="col-lg-3 mr-5 p-0 ">
+                    <div class="card row pl-0 pr-0">
+                      <div class="card-header" >
+                        체중
+                      </div>
+                      <div id="chart1" style="height: 20rem;">
+                      </div>
                     </div>
-                    <div class="card col-lg-4 pl-0 pr-0" style="width: 18rem;">
-                        <div class="card-header">
-                            건강
-                        </div>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">Cras justo odio</li>
-                            <li class="list-group-item">Dapibus ac facilisis in</li>
-                            <li class="list-group-item">Vestibulum at eros</li>
-                        </ul>
+                  </div>
+                  <div class="col-lg-3 ml-5 mr-5 p-0">
+                    <div class="card row pl-0 pr-0">
+                      <div class="card-header" >
+                        산책
+                      </div>
+                      <div id="chart2" style="height: 20rem;">
+                      </div>
                     </div>
-                    <div class="card col-lg-4 pl-0 pr-0" style="width: 18rem;">
-                        <div class="card-header">
-                            기타
-                        </div>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">Cras justo odio</li>
-                            <li class="list-group-item">Dapibus ac facilisis in</li>
-                            <li class="list-group-item">Vestibulum at eros</li>
-                        </ul>
+                  </div>
+                  <div class="col-lg-3 ml-5 p-0">
+                    <div class="card row pl-0 pr-0">
+                      <div class="card-header" >
+                        사료 급여량
+                      </div>
+                      <div id="chart3" style="height: 20rem;">
+                      </div>
                     </div>
-                
-                
+                  </div>
                 </div>
+                
+                
+            </div>
+
+
+            <div class="container-fluid m-0 p-0 mb-5">
+                <h2 class="pl-4 ml-5 mb-4 mt-4">특이사항</h2>
+
+                <div class="container-fluid row d-flex justify-content-center">
+
+                  <div class="col-lg-3 mr-5 p-0" >
+                    <div class="card row pl-0 pr-0">
+                        <div class="card-header " style="height: 3rem;">
+                          <div class="row">
+                            <div class="col-4">
+                              음식
+                            </div>
+                            <div class="col-8 d-flex justify-content-end">
+                              <button type="button" class="btn btn-light p-0" data-toggle="modal" data-target="#food">
+                                  &#x2b;
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                          {% for h in foods %}
+                            <li class="list-group-item d-flex justify-content-between">
+                              {{ h.food }}
+                              <a href="{% url 'food_delete' h.id dog_num %}"><i class="fas fa-trash-alt text-secondary"></i></a>
+                            </li>                            
+                          {% endfor %}
+                        </ul>                       
+
+                        
+                    </div>
+                    <div class="row d-flex justify-content-center mt-3">
+                        <nav aria-label="Page navigation example">
+                          <ul class="pagination justify-content-center">
+                            {%if foods.has_previous%}
+                            <li class="page-item">
+                              <a class="page-link" href="?page1={{foods.previous_page_number}}" tabindex="-1" aria-disabled="true">&laquo;</a>
+                            </li>
+                            {%else%}
+                            <li class="page-item disabled">
+                              <a class="page-link" href="#" tabindex="-1" aria-disabled="true">&laquo;</a>
+                            </li>
+                            {%endif%}
+
+                            {% for i in foods.paginator.page_range %}
+                                {% if foods.number == i %}
+                                    <li class="page-item active"><a class="page-link" href="#">{{ i }}</a></li>
+                                {% else %}
+                                    <li class="page-item"><a class="page-link" href="?page1={{ i }}">{{ i }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {%if foods.has_next%}
+                            <li class="page-item">
+                                <a class="page-link" href="?page1={{foods.next_page_number}}">&raquo;</a>
+                              </li>
+                              {%else%}
+                              <li class="page-item disabled">
+                                <a class="page-link" href="#">&raquo;</a>
+                              </li>
+                            {%endif%}
+                          </ul>
+                        </nav>
+                    </div>
+                  </div>
+
+                  
+                    <div class="col-lg-3 ml-5 mr-5 p-0" >
+                      <div class="card row pl-0 pr-0">
+                          <div class="card-header " style="height: 3rem;">
+                            <div class="row">
+                              <div class="col-4">
+                                건강
+                              </div>
+                              <div class="col-8 d-flex justify-content-end">
+                                <button type="button" class="btn btn-light p-0" data-toggle="modal" data-target="#health">
+                                    &#x2b;
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                          <ul class="list-group list-group-flush">
+                            {% for h in healths %}
+                              <li class="list-group-item d-flex justify-content-between">
+                                {{ h.health }}
+                                <a href="{% url 'health_delete' h.id dog_num %}"><i class="fas fa-trash-alt text-secondary"></i></a>
+                              </li>
+                            {% endfor %}
+                          </ul>                       
+  
+                          
+                      </div>
+                      <div class="row d-flex justify-content-center mt-3">
+                          <nav aria-label="Page navigation example">
+                              <ul class="pagination justify-content-center">
+                                {%if healths.has_previous%}
+                                <li class="page-item">
+                                  <a class="page-link" href="?page2={{healths.previous_page_number}}" tabindex="-1" aria-disabled="true">&laquo;</a>
+                                </li>
+                                {%else%}
+                                <li class="page-item disabled">
+                                  <a class="page-link" href="#" tabindex="-1" aria-disabled="true">&laquo;</a>
+                                </li>
+                                {%endif%}
+    
+                                {% for i in healths.paginator.page_range %}
+                                    {% if healths.number == i %}
+                                        <li class="page-item active"><a class="page-link" href="#">{{ i }}</a></li>
+                                    {% else %}
+                                        <li class="page-item"><a class="page-link" href="?page2={{ i }}">{{ i }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+                                
+                                {%if healths.has_next%}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page2={{healths.next_page_number}}">&raquo;</a>
+                                  </li>
+                                  {%else%}
+                                  <li class="page-item disabled">
+                                    <a class="page-link" href="#">&raquo;</a>
+                                  </li>
+                                {%endif%}
+                              </ul>
+                            </nav>
+                      </div>
+                    </div>
+                   
+                    
+                      <div class="col-lg-3 ml-5 p-0" >
+                        <div class="card row pl-0 pr-0">
+                            <div class="card-header " style="height: 3rem;">
+                              <div class="row">
+                                <div class="col-4">
+                                  기타
+                                </div>
+                                <div class="col-8 d-flex justify-content-end">
+                                  <button type="button" class="btn btn-light p-0" data-toggle="modal" data-target="#record">
+                                      &#x2b;
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                              {% for h in records %}
+                                <li class="list-group-item d-flex justify-content-between">
+                                  {{ h.record }}
+                                  <a href="{% url 'record_delete' h.id dog_num %}"><i class="fas fa-trash-alt text-secondary"></i></a>
+                                </li>
+                              {% endfor %}
+                            </ul>                       
+                        </div>
+                        <div class="row d-flex justify-content-center mt-3">
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination justify-content-center">
+                                  {%if records.has_previous%}
+                                  <li class="page-item">
+                                    <a class="page-link" href="?page3={{records.previous_page_number}}" tabindex="-1" aria-disabled="true">&laquo;</a>
+                                  </li>
+                                  {%else%}
+                                  <li class="page-item disabled">
+                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">&laquo;</a>
+                                  </li>
+                                  {%endif%}
+      
+                                  {% for i in records.paginator.page_range %}
+                                      {% if records.number == i %}
+                                          <li class="page-item active"><a class="page-link" href="#">{{ i }}</a></li>
+                                      {% else %}
+                                          <li class="page-item"><a class="page-link" href="?page3={{ i }}">{{ i }}</a></li>
+                                      {% endif %}
+                                  {% endfor %}
+                                  
+                                  {%if records.has_next%}
+                                  <li class="page-item">
+                                      <a class="page-link" href="?page3={{records.next_page_number}}">&raquo;</a>
+                                    </li>
+                                    {%else%}
+                                    <li class="page-item disabled">
+                                      <a class="page-link" href="#">&raquo;</a>
+                                    </li>
+                                  {%endif%}
+                                </ul>
+                              </nav>
+                        </div>
+
+                      
+                
             </div>
         </div>
-        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-            <h2>예방접종</h2>
-            <table class="table table-striped">
-                    <thead>
-                      <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">First</th>
-                        <th scope="col">Last</th>
-                        <th scope="col">Handle</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>@mdo</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">2</th>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                        <td>@fat</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">3</th>
-                        <td>Larry</td>
-                        <td>the Bird</td>
-                        <td>@twitter</td>
-                      </tr>
-                    </tbody>
-                  </table>
-        </div>
-        <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
-                <h2>진료</h2>
-                <table class="table table-striped">
-                        <thead>
-                          <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">First</th>
-                            <th scope="col">Last</th>
-                            <th scope="col">Handle</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <th scope="row">1</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">2</th>
-                            <td>Jacob</td>
-                            <td>Thornton</td>
-                            <td>@fat</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">3</th>
-                            <td>Larry</td>
-                            <td>the Bird</td>
-                            <td>@twitter</td>
-                          </tr>
-                        </tbody>
-                      </table>
-        </div>
-        <div class="tab-pane fade" id="nav-life" role="tabpanel" aria-labelledby="nav-contact-tab">...</div>
+  
+        
       </div>
 </div>
 
+
+
+<!-- Modal -->
+<div class="modal fade" id="food" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-primary">
+        <h5 class="modal-title text-white" id="exampleModalScrollableTitle ">음식 특이사항 기입</h5>
+        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="{% url 'food_add' %}" class="m-0">
+          <div class="form-group row">
+            <label class="col-sm-3 col-form-label">특이사항</label>
+            <div class="col-sm-9">
+              <input class="form-control" type="text" name="food">
+              <input type="hidden" name="dog" value="{{dog_num}}">
+            </div>
+          </div>
+          <div class="container d-flex justify-content-center">
+              <input class="btn btn-primary" type="submit" value="저장하기">
+          </div>
+          
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="health" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-primary">
+        <h5 class="modal-title text-white" id="exampleModalScrollableTitle ">건강 특이사항 기입</h5>
+        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="{% url 'health_add' %}" class="m-0">
+          <div class="form-group row">
+            <label class="col-sm-3 col-form-label">특이사항</label>
+            <div class="col-sm-9">
+              <input class="form-control" type="text" name="health">
+              <input type="hidden" name="dog" value="{{dog_num}}">
+            </div>
+          </div>
+          <div class="container d-flex justify-content-center">
+              <input class="btn btn-primary" type="submit" value="저장하기">
+          </div>
+          
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="record" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-primary">
+        <h5 class="modal-title text-white" id="exampleModalScrollableTitle ">기타 특이사항 기입</h5>
+        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="{% url 'record_add' %}" class="m-0">
+          <div class="form-group row">
+            <label class="col-sm-3 col-form-label">특이사항</label>
+            <div class="col-sm-9">
+              <input class="form-control" type="text" name="record">
+              <input type="hidden" name="dog" value="{{dog_num}}">
+            </div>
+          </div>
+          <div class="container d-flex justify-content-center">
+              <input class="btn btn-primary" type="submit" value="저장하기">
+          </div>
+          
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="dog" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
+      <div class="modal-content">
+        <div class="modal-header bg-primary">
+          <h5 class="modal-title text-white" id="exampleModalScrollableTitle ">반려동물 추가</h5>
+          <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="{% url 'dog_add' dog_num %}" method="POST" class="m-0" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group row">
+              <label class="col-sm-3 col-form-label">이름</label>
+              <div class="col-sm-9">
+                <input class="form-control" type="text" name="name">
+              </div>
+              <label class="col-sm-3 col-form-label">종류</label> 
+              <div class="col-sm-9">
+                <input class="form-control" type="text" name="kind">
+              </div>
+              <label class="col-sm-3 col-form-label">생년월일</label>
+              <div class="col-sm-9">
+                <input class="form-control" type="date" name="birthday">
+              </div>
+              <label class="col-sm-3 col-form-label">성별</label>
+              <div class="col-sm-9">
+                <select class="form-control" name="gender">
+                    <option value="True">남자</option>
+                    <option value="False">여자</option>
+                </select>
+              </div>
+              <label class="col-sm-3 col-form-label">사진</label>
+              <div class="col-sm-9">
+                <input class="form-control" type="file" name="image">
+              </div>
+              
+              
+              <input class="form-control" type="hidden" name="num" value="{{last_dog_num}}">
+              
+            </div>
+            <div class="container d-flex justify-content-center">
+                <input class="btn btn-primary" type="submit" value="저장하기">
+            </div>
+            
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<script src="https://code.highcharts.com/highcharts.src.js"></script>
+<script>
+  Highcharts.chart('chart1', {
+      // chart: {
+      //     type: 'column'
+      // },
+      title: {
+          text: ''
+      },
+      xAxis: {
+          categories: {{ date }}
+      },
+      series: [{
+          name: '체중',
+          data: {{ weight }}
+      }]
+  });
+
+  Highcharts.chart('chart2', {
+      // chart: {
+      //     type: 'column'
+      // },
+      title: {
+          text: ''
+      },
+      xAxis: {
+          categories: {{ date }}
+      },
+      series: [{
+          name: '산책',
+          data: {{ walk }}
+      }]
+  });
+
+  Highcharts.chart('chart3', {
+      chart: {
+          type: 'column'
+      },
+      title: {
+          text: ''
+      },
+      xAxis: {
+          categories: {{ date }}
+      },
+      series: [{
+          name: '아침',
+          data: {{ morning_amount }}
+      },
+      {
+          name: '점심',
+          data: {{ lunch_amount }}
+      },
+      {
+          name: '저녁',
+          data: {{ dinner_amount }}
+      }]
+  });
+</script>
 {% endblock %}

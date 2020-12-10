@@ -5,46 +5,71 @@
 {% block content %}
 {% load staticfiles %}
 <div class="container-fluid bg-light">
-    <h1>강서구</h1>
+    <form action="{% url 'compare' %}" class="m-0">
+            <div class="form-group row text-center  d-flex justify-content-center pt-4 pb-4">
+                <div class="col-sm-3">
+                    <select name="city" class="form-control" selected="selected">
+                    <option value="0">서울</option>
+                    <option value="1">종로, 중구, 용산</option>
+                    <option value="2">도봉, 강북, 성북, 노원</option>
+                    <option value="3">동대문, 중랑, 성동, 광진</option>
+                    <option value="4">강동, 송파</option>
+                    <option value="5">서초, 강남</option>
+                    <option value="6">동작, 관악, 금천</option>
+                    <option value="7">강서, 양천, 영등포, 구로</option>
+                    <option value="8">은평, 마포, 서대문</option>
+                    </select>
+                    
+                </div>
+                <div class="col-sm-1">
+                        <input class="btn btn-dark" type="submit" value="적용하기">
+                </div>
+                
+            </div>
+
+         </form>   
 </div>
+
 
 <div class="container mt-5">
     <div class="row">
-        <h2>예방접종</h2>
-        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-
-    <script type="text/javascript" src="https://code.highcharts.com/highcharts.js"></script>
-
-    <script type="text/javascript" src="https://code.highcharts.com/modules/exporting.js"></script>
-
-    <script type="text/javascript" src="https://code.highcharts.com/modules/data.js"></script>
-
-
-    <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-
-    <script type="text/javascript">
-
-        $.get('/price/data.json', function(jsondata) {
-
-            Highcharts.chart('container', {
-
-               chart: {
-
-                    type: 'spline'
-
-                },
-
-                data: jsondata,
-
-            });
-
-        });
-
-    </script>
-        
+        <h2>예방접종</h2>  
     </div>
-</div>
+    
+    <div class="mt-5" id="chart2" style="height: 400px;"></div>
+        
 
+     
+
+</div>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+
+<script type="text/javascript" src="https://code.highcharts.com/highcharts.js"></script>
+
+<script type="text/javascript" src="https://code.highcharts.com/modules/exporting.js"></script>
+
+<script type="text/javascript" src="https://code.highcharts.com/modules/data.js"></script>
+<script type="text/javascript">
+  Highcharts.chart('chart2', {
+      chart: {
+          type: 'column'
+      },
+      title: {
+          text: ''
+      },
+      xAxis: {
+          categories: ['켄넬코프', '종합백신', '코로나', '신종플루', '광견병']
+      },
+      series: [{
+          name: '서울',
+          data: {{ seoul }}
+      },
+      {
+          name: '{{ cityname }}',
+          data: {{ city_price }}
+      }]
+  });
+</script>
 {% endblock %}
 
 

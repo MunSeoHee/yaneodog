@@ -1,3 +1,6 @@
+<!-- NavBar -->
+
+<!-- Bootstrap include -->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
@@ -14,15 +17,33 @@
             <li class="nav-item">
             <a class="nav-link" href="/price">가격비교</a>
             </li>
-            <li class="nav-item">
-            <a class="nav-link" href="/diary">다이어리</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">로그인</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">회원가입</a>
-            </li>
+            
+
+            <!-- 로그인 되어있는 상태인지 판단 -->
+            <!-- 로그인이 되어있을 경우 -->
+            {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/diary">다이어리</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="javascript:{document.getElementById('logout').submit()}">Logout</a>
+                    <form class="m-0" id="logout" method="POST" action="{% url 'logout' %}">
+                        <!-- 보안을 위한 토큰 -->
+                        {% csrf_token %} <input type="hidden" />
+                    </form>
+                </li>
+            <!-- 로그인이 되어있지 않을 경우 -->
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link " href="{% url 'login' %}" tabindex="-1" aria-disabled="">로그인</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " href="{% url 'signup' %}" tabindex="-1" aria-disabled="">회원가입</a>
+                </li>
+            {% endif %}
+            
+            
         </ul>
     </div>
 
@@ -31,3 +52,17 @@
     {% block content %}
     {% endblock %}
     
+<style>
+@font-face { font-family: 'S-CoreDream-7ExtraBold'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-7ExtraBold.woff') format('woff'); font-weight: normal; font-style: normal; }
+* {
+    font-family: 'S-CoreDream-7ExtraBold';
+}
+
+a{
+    color : black;
+}
+
+h2 {
+    color : rgb(1,80,113);
+}
+</style>

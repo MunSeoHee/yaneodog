@@ -1,0 +1,266 @@
+
+
+{% extends 'base.html' %}
+
+{% block content %}
+{% load staticfiles %}
+
+<div class="container-fluid bg-light d-flex justify-content-center pt-5 pb-5">
+    {% for i in dog_infos %}
+    <a href="{% url 'diary_dog' i.num %}"><img src="{{i.image.url}}" alt="..." class="rounded-circle mr-2 ml-2" style="width: 100px; height: 100px;"></a>
+    {%endfor%}
+</div>
+<div class="container-fluid pl-0 pr-0">
+    <nav>
+        <div class="nav nav-tabs bg-light">
+            <a class="nav-item nav-link " href="{% url 'diary_dog' dog_num %}" aria-selected="false">애견정보</a>
+            <a class="nav-item nav-link " href="{% url 'vaccination' dog_num %}" aria-selected="false">예방접종</a>
+            <a class="nav-item nav-link " href="{% url 'diagnosis' dog_num %}" aria-selected="false">진료</a>
+          <a class="nav-item nav-link active" href="{% url 'dailylife' dog_num %}" aria-selected="true">일상</a>
+          </div>
+      </nav>
+      <div class="tab-content" id="nav-tabContent">
+        
+        <div class="tab-pane fade show active">
+            <div class="container mt-2 tab-pane fade show active">
+                <div class="row mb-3">
+                    <div class="col text-right">
+                      <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#daily">
+                          추가하기
+                      </button>
+                    </div>
+                  </div>
+                <div class="row d-flex justify-content-center">
+                  <div class="col-lg-2 p-0">
+                    <div class="row ">
+                      <div class="col text-right">
+                        <h3 class="text-danger">●</h3>
+                      </div>
+                      <div class="col text-left p-0">
+                        <p>구토</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-2 p-0">
+                      <div class="row">
+                        <div class="col text-right">
+                          <h3 class="text-info">●</h3>
+                        </div>
+                        <div class="col text-left p-0">
+                          <p>이상행동</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-3 p-0">
+                        <div class="row">
+                          <div class="col text-right">
+                            <h3 class="text-success">●</h3>
+                          </div>
+                          <div class="col text-left p-0">
+                            <p>구토 및 이상행동</p>
+                          </div>
+                        </div>
+                      </div>
+                </div>
+                
+
+            <div class="container ">
+              {% for i in dailys%}
+              <div class="row border rounded  text-center mt-3 p-0 ">
+                <div class="col-lg p-2 border-right date">
+                  {{i.date | date:"Y.m.d"}}
+                </div>
+
+                <div class="col-lg p-2 border-right">
+                  <i class="fas fa-poop"></i>
+                  {{i.dung}} 
+                </div>
+
+                <div class="col-lg p-2 border-right">
+                  <i class="fas fa-weight"></i>
+                  {{i.weight}}
+                </div>
+
+                <div class="col-lg p-2 border-right">
+                  <i class="fas fa-bone"></i>
+                  {% if i.marning == False and i.lunch == False and i.dinner == False%}
+                    0
+                  {% elif i.marning == True and i.lunch == True and i.dinner == True %}
+                    3
+                  {% elif i.marning == True and i.lunch == True and i.dinner == False %}
+                    2
+                  {% elif i.marning == True and i.lunch == False and i.dinner == True %}
+                    2
+                  {% elif i.marning == False and i.lunch == True and i.dinner == True %}
+                    2
+                  {% else %}
+                    1
+                  {%endif%}
+                </div>
+
+                <div class="col-lg p-2 border-right">
+                  <i class="fas fa-tint"></i>
+                  {{i.shower}}
+                </div>
+
+                <div class="col-lg p-2 border-right">
+                  <i class="fas fa-dog"></i>  
+                  {{i.walk}}
+                </div>
+
+                <div class="col-lg p-2 border-right">
+                  <i class="fas fa-pills"></i> 
+                  {{i.medicine}}
+                </div>
+
+                <div class="col-lg p-2 border-right">
+                  {%if i.puke != '' and i.behavior != '' %}
+                    <h3 class="text-success p-0 m-0">●</h3>
+                  {%elif i.behavior != '' and i.puke == '' %}
+                    <h3 class="text-info p-0 m-0">●</h3>
+                  {%elif i.puke != '' and i.behavior == '' %}
+                    <h3 class="text-danger p-0 m-0">●</h3>
+                  {%else%}
+
+                  {%endif%}
+                </div>
+
+                <div class="col-lg p-2 ">
+                  <a href="{% url 'daily_delete' i.id dog_num %}"><i class="fas fa-trash-alt text-secondary"></i></a>
+                </div>
+              </div>
+              {%endfor%}
+            </div>
+            
+  
+
+
+
+        </div>     
+      </div>
+</div>
+
+<div class="modal fade" id="daily" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
+      <div class="modal-content">
+        <div class="modal-header bg-primary">
+          <h5 class="modal-title text-white" id="exampleModalScrollableTitle ">일상 기입</h5>
+          <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+ 
+        
+        <div class="modal-body">
+          <form action="{% url 'daily_add' %}" class="m-0">
+            <div class="form-group row">
+              <input type="hidden" name="dog" value="{{dog_num}}">
+
+              <label class="col-sm-3 col-form-label mb-2">날짜</label>
+              <div class="col-sm-9">
+                <input class="form-control" type="date" name="date">
+              </div>
+
+              <label class="col-sm-3 col-form-label mb-2">산책</label>
+              <div class="col-sm-9">
+                <input class="form-control" type="number" name="walk">
+              </div>
+
+              <label class="col-sm-3 col-form-label mb-2">몸무게</label>
+              <div class="col-sm-9">
+                <input class="form-control" type="number" name="weight">
+              </div>
+
+              <label class="col-sm-3 col-form-label mb-2">변 상태</label>
+              <div class="col-sm-9">
+                <select name="dung" class="form-control">
+                  <option value="상태2">상태1</option>
+                  <option value="상태1">상태2</option>
+                </select>
+              </div>
+
+              <label class="col-sm-3 col-form-label mb-2">소변 상태</label>
+              <div class="col-sm-9">
+                <select name="Pee" class="form-control">
+                  <option value="상태2">상태1</option>
+                  <option value="상태1">상태2</option>
+                </select>
+              </div>
+
+              <label class="col-sm-3 col-form-label mb-2">아침 밥</label>
+              <div class="col-sm-9">
+                <input class="form-control" type="checkbox" value="True" name="morning">
+              </div>
+
+              <label class="col-sm-3 col-form-label mb-2">아침 급여 양</label>
+              <div class="col-sm-9">
+                <input class="form-control" type="number" value="NULL" name="morning_amount">
+              </div>
+
+              <label class="col-sm-3 col-form-label mb-2">점심 밥</label>
+              <div class="col-sm-9">
+                <input class="form-control" type="checkbox" value="True" name="lunch">
+              </div>
+
+              <label class="col-sm-3 col-form-label mb-2">점심 급여 양</label>
+              <div class="col-sm-9">
+                <input class="form-control" type="number" value="NULL" name="lunch_amount">
+              </div>
+
+              <label class="col-sm-3 col-form-label mb-2">저녁 밥</label>
+              <div class="col-sm-9">
+                <input class="form-control" type="checkbox" value="True" name="dinner">
+              </div>
+
+              <label class="col-sm-3 col-form-label mb-2">저녁 급여 양</label>
+              <div class="col-sm-9">
+                <input class="form-control" type="number" value="NULL" name="dinner_amount">
+              </div>
+
+              <label class="col-sm-3 col-form-label mb-2">목욕</label>
+              <div class="col-sm-9">
+                <input class="form-control" type="checkbox" value="True" name="shower">
+              </div>
+
+              <label class="col-sm-3 col-form-label mb-2">약</label>
+              <div class="col-sm-9">
+                <input class="form-control" type="text" name="medicine">
+              </div>
+
+              <label class="col-sm-3 col-form-label mb-2">구토</label>
+              <div class="col-sm-9">
+                <input class="form-control" type="text" name="puke">
+              </div>
+
+              <label class="col-sm-3 col-form-label mb-2">이상행동</label>
+              <div class="col-sm-9">
+                <input class="form-control" type="text" name="behavior">
+              </div>
+
+              <label class="col-sm-3 col-form-label mb-2">기타 사항</label>
+              <div class="col-sm-9">
+                <input class="form-control" type="textarea" name="record">
+              </div>
+
+            </div>
+            <div class="container d-flex justify-content-center">
+                <input class="btn btn-primary" type="submit" value="저장하기">
+            </div>
+            
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+<style>
+.date {
+  background-color: rgb(222,235,247);
+}
+
+</style>
+
+
+{% endblock %}
+
