@@ -7,3 +7,6 @@ pip install mysqlclient
 ```
 python manage.py runserver
 ```
+
+## 서비스 소개 영상
+https://www.youtube.com/watch?v=A8_hL6HLtbs&feature=youtu.be
